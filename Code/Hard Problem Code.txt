@@ -1,0 +1,55 @@
+Sub hard_measuring_most_change()
+    Dim ticker_index As Integer
+    ticker_index = 1
+    For I = 2 To Cells(Rows.Count, 1).End(xlUp).Row
+        If Cells(I, 1).Value <> Cells(I - 1, 1).Value Then
+            ticker_index = ticker_index + 1
+            Cells(ticker_index, 9).Value = Cells(I, 1).Value
+            Cells(ticker_index, 12).Value = Cells(I, 7).Value
+            Dim begin_open As Double
+            begin_open = Cells(I, 3).Value
+        Else
+            Cells(ticker_index, 12).Value = Cells(I, 7).Value + Cells(ticker_index, 12).Value
+        End If
+        If Cells(I, 1).Value <> Cells(I + 1, 1).Value Then
+            Cells(ticker_index, 10).Value = Cells(I, 6).Value - begin_open
+            If begin_open <> 0 Then
+                Cells(ticker_index, 11).Value = Cells(ticker_index, 10).Value / begin_open
+            Else
+                Cells(ticker_index, 11).Value = "N/A"
+            End If
+            If Cells(ticker_index, 10).Value > 0 Then
+                Cells(ticker_index, 10).Interior.ColorIndex = 4
+            ElseIf Cells(ticker_index, 10).Value < 0 Then
+                Cells(ticker_index, 10).Interior.ColorIndex = 3
+            End If
+        End If
+    Next I
+    Cells(1, 9).Value = "Ticker"
+    Cells(1, 10).Value = "Yearly Change"
+    Cells(1, 11).Value = "Percent Change"
+    Cells(1, 12).Value = "Total Stock Volume"
+    Cells(2,15).Value = "Greatest % Increase"
+    Cells(3,15).Value = "Greatest % Decrease"
+    Cells(4,15).Value = "Greatest Total Volume"
+    Cells(1,16).Value = "Ticker"
+    Cells(1,17).Value = "Value"
+    Cells(2,17).Value = -1000
+    Cells(3,17).Value = 1000
+    Cells(4,17).Value = 0
+    For i = 2 to Cells(Rows.Count,9).End(xlUp).Row
+        If Cells(i,11).Value <> "N/A" Then
+            If Cells(i,11).Value > Cells(2,17).Value Then
+                Cells(2,16).Value = Cells(i,9).Value
+                Cells(2,17).Value = Cells(i,11).Value
+            ElseIf Cells(i,11).Value < Cells(3,17).Value Then
+                Cells(3,16).Value = Cells(i,9).Value
+                Cells(3,17).Value = Cells(i,11).Value
+            End If
+        End
+        If Cells(i,12).Value > Cells(4,17).Value Then
+            Cells(4,16).Value = Cells(i,9).Value
+            Cells(4,17).Value = Cells(i,12).Value
+        End If
+    Next i
+End Sub

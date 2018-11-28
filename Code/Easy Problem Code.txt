@@ -1,0 +1,18 @@
+Sub easy_measuring_volume()
+Dim current As Worksheet
+For Each current In Worksheets
+    Dim ticker_index As Integer
+    ticker_index = 1
+    For i = 2 To current.Cells(Rows.Count, 1).End(xlUp).Row
+        If current.Cells(i, 1).Value <> current.Cells(i - 1, 1).Value Then
+            ticker_index = ticker_index + 1
+            current.Cells(ticker_index, 9).Value = current.Cells(i, 1).Value
+            current.Cells(ticker_index, 10).Value = current.Cells(i, 7).Value
+        Else
+            current.Cells(ticker_index, 10).Value = current.Cells(i, 7).Value + current.Cells(ticker_index, 10).Value
+        End If
+    Next i
+Next
+Cells(1, 9).Value = "Ticker"
+Cells(1, 10).Value = "Total Stock Volume"
+End Sub

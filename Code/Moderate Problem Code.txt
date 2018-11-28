@@ -1,0 +1,35 @@
+Sub moderate_measuring_yearly_change()
+Dim current As Worksheet
+For Each current In Worksheets
+    Dim ticker_index As Integer
+    ticker_index = 1
+    For I = 2 To current.Cells(Rows.Count, 1).End(xlUp).Row
+        If current.Cells(I, 1).Value <> current.Cells(I - 1, 1).Value Then
+            ticker_index = ticker_index + 1
+            current.Cells(ticker_index, 9).Value = current.Cells(I, 1).Value
+            current.Cells(ticker_index, 12).Value = current.Cells(I, 7).Value
+            Dim begin_open As Double
+            begin_open = current.Cells(I, 3).Value
+        Else
+            current.Cells(ticker_index, 12).Value = current.Cells(I, 7).Value + current.Cells(ticker_index, 12).Value
+        End If
+        If current.Cells(I, 1).Value <> current.Cells(I + 1, 1).Value Then
+            current.Cells(ticker_index, 10).Value = current.Cells(I, 6).Value - begin_open
+            If begin_open <> 0 Then
+                current.Cells(ticker_index, 11).Value = current.Cells(ticker_index, 10).Value / begin_open
+            Else
+                current.Cells(ticker_index, 11).Value = "N/A"
+            End If
+            If current.Cells(ticker_index, 10).Value > 0 Then
+                current.Cells(ticker_index, 10).Interior.ColorIndex = 4
+            ElseIf current.Cells(ticker_index, 10).Value < 0 Then
+                current.Cells(ticker_index, 10).Interior.ColorIndex = 3
+            End If
+        End If
+    Next I
+    current.Cells(1, 9).Value = "Ticker"
+    current.Cells(1, 10).Value = "Yearly Change"
+    current.Cells(1, 11).Value = "Percent Change"
+    current.Cells(1, 12).Value = "Total Stock Volume"
+Next
+End Sub
